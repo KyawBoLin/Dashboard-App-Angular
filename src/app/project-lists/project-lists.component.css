@@ -1,0 +1,9 @@
+.clickableRow {
+  cursor: pointer;
+}
+
+.pageSizeStyle {
+  width: auto;
+  height: 40px;
+  cursor: pointer;
+}

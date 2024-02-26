@@ -1,0 +1,24 @@
+<div class="table-responsive">
+  <div *ngIf="projectDatas$">
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr class = "text-center">
+          <th scope="col">プロジェクト</th>
+          <th scope="col">規模</th>
+          <th scope="col">期間</th>
+          <th scope="col">ステータス</th>
+          <th scope="col">SPI</th>
+      </thead>
+      <tbody>
+          <tr>
+            <td class = "text-center">{{projectDatas$.projectId}}</td>
+            <td class = "text-center">{{projectDatas$.scale}}</td>
+            <td class = "text-end">{{projectDatas$.date}}</td>
+            <td class = "text-end">{{projectDatas$.status}}</td>
+            <td class = "text-end">{{projectDatas$.spi}}</td>
+          </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<router-outlet></router-outlet>

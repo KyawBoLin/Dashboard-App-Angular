@@ -1,0 +1,81 @@
+<div class = "container">
+  <form>
+    <script>$scope.setSelected = function(ingredient) {
+      $scope.selected = ingredient;
+      console.log($scope.selected);
+      };
+    </script>
+    <div class="mb-3 row my-4 d-flex align-items-center">
+      <label for="table-complete-search" class="col-xs-3 col-sm-auto col-form-label">Search:</label>
+      <div class="col-xs-3 col-sm-auto input-group-sm">
+        <input
+          id="table-complete-search"
+          type="text"
+          class="form-control"
+          name="searchTerm"
+          [(ngModel)]="service.searchTerm"
+        />
+      </div>
+      @if (service.loading$ | async) {
+        <span class="col col-form-label">Loading...</span>
+      }
+    </div>
+  <div class="table-responsive">
+    <h5>メイン（全案件一覧）</h5>
+    <table class="table table-hover table-bordered">
+      <thead class="table-primary">
+        <tr class = "text-center">
+          <th scope="col" sortable="projectId" (sort)="onSort($event)">プロジェクト</th>
+          <!-- <th scope="col" sortable="scale" (sort)="onSort($event)"><fa-icon [icon]="faSort"></fa-icon>&nbsp; 規模</th> -->
+          <th scope="col" sortable="scale" (sort)="onSort($event)">規模</th>
+          <th scope="col" sortable="date" (sort)="onSort($event)">期間</th>
+          <th scope="col" sortable="status" (sort)="onSort($event)">ステータス</th>
+          <th scope="col" sortable="spi" (sort)="onSort($event)">SPI</th>
+      </thead>
+      <tbody>
+        @for (projectData of projectDatas$ | async; track projectData.projectId) {
+          <!-- <tr ng-repeat="projectData in projectDatas" ng-click="setSelected(projectData)"> -->
+          <tr (click)="showDetails(projectData.projectId)" class = "clickableRow">
+            <!-- <td scope="row" class = "text-center">{{ projectData.projectId }}</td> -->
+            <td class = "text-center"><ngb-highlight [result]="projectData.projectId" [term]="service.searchTerm" /></td>
+            <td class = "text-center"><ngb-highlight [result]="projectData.scale" [term]="service.searchTerm" /></td>
+            <td class = "text-end"><ngb-highlight [result]="projectData.date" [term]="service.searchTerm" /></td>
+            <td class = "text-end"><ngb-highlight [result]="projectData.status" [term]="service.searchTerm" /></td>
+            <td class = "text-end"><ngb-highlight [result]="projectData.spi" [term]="service.searchTerm" /></td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="4" class = "text-center">No projectDatas found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+    <div class="d-flex justify-content-center p-2">
+
+      <select class="form-select mx-3 pageSizeStyle" name="pageSize" [(ngModel)]="service.pageSize">
+        <option [ngValue]="2">2 items per page</option>
+        <option [ngValue]="4">4 items per page</option>
+        <option [ngValue]="6">6 items per page</option>
+      </select>
+
+      <div>
+        <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="service.page" [pageSize]="service.pageSize">
+        </ngb-pagination>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="d-flex justify-content-end my-3 container">
+    <button routerLink="/day" class="btn btn-primary mx-1" routerLinkActive="activebutton" ariaCurrentWhenActive="page" [disabled] = "isDisabled">
+      前日比較
+    </button>
+    <button routerLink="/week" class="btn btn-primary mx-1" routerLinkActive="activebutton" ariaCurrentWhenActive="page" [disabled] = "isDisabled">
+      前週比較
+    </button>
+    <button routerLink="/month" class="btn btn-primary mx-1" routerLinkActive="activebutton" ariaCurrentWhenActive="page" [disabled] = "isDisabled">
+      前月比較
+    </button>
+</div>
+<app-project-lists-detail [projectDatas$] ='selectedProject'></app-project-lists-detail>
